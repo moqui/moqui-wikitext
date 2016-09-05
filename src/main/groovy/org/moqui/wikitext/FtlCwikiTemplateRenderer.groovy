@@ -49,7 +49,7 @@ class FtlCwikiTemplateRenderer implements TemplateRenderer {
         Template theTemplate;
         if (templateFtlLocationCache instanceof MCache) {
             MCache<String, Template> mCache = (MCache) templateFtlLocationCache;
-            ResourceReference rr = ecfi.getResourceFacade().getLocationReference(location);
+            ResourceReference rr = ecfi.resourceFacade.getLocationReference(location);
             long lastModified = rr != null ? rr.getLastModified() : 0L;
             theTemplate = mCache.get(location, lastModified);
         } else {

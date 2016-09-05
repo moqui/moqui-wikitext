@@ -13,6 +13,7 @@
  */
 package org.moqui.wikitext
 
+import groovy.transform.CompileStatic
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory
 
 import javax.cache.Cache
 
+@CompileStatic
 class WikiTemplateRenderer implements TemplateRenderer {
     protected final static Logger logger = LoggerFactory.getLogger(WikiTemplateRenderer.class)
 
@@ -51,7 +53,7 @@ class WikiTemplateRenderer implements TemplateRenderer {
         String wikiText;
         if (templateWikiLocationCache instanceof MCache) {
             MCache<String, String> mCache = (MCache) templateWikiLocationCache;
-            ResourceReference rr = ecfi.getResourceFacade().getLocationReference(location);
+            ResourceReference rr = ecfi.resourceFacade.getLocationReference(location);
             long lastModified = rr != null ? rr.getLastModified() : 0L;
             wikiText = mCache.get(location, lastModified);
         } else {
