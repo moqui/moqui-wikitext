@@ -17,7 +17,7 @@ import groovy.transform.CompileStatic
 import org.eclipse.mylyn.wikitext.confluence.core.ConfluenceLanguage
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser
 import org.eclipse.mylyn.wikitext.core.parser.builder.HtmlDocumentBuilder
-import org.moqui.context.ResourceReference
+import org.moqui.resource.ResourceReference
 import org.moqui.context.TemplateRenderer
 import org.moqui.impl.screen.ScreenRenderImpl
 import org.moqui.jcache.MCache
