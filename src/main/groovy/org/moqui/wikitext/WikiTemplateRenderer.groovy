@@ -50,20 +50,23 @@ class WikiTemplateRenderer implements TemplateRenderer {
     }
 
     void render(String location, Writer writer) {
-        String wikiText;
-        if (templateWikiLocationCache instanceof MCache) {
-            MCache<String, String> mCache = (MCache) templateWikiLocationCache;
-            ResourceReference rr = ecfi.resourceFacade.getLocationReference(location);
-            long lastModified = rr != null ? rr.getLastModified() : 0L;
-            wikiText = mCache.get(location, lastModified);
-        } else {
-            // TODO: doesn't support on the fly reloading without cache expire/clear!
-            wikiText = templateWikiLocationCache.get(location);
-        }
+        int hashIndex = location.indexOf("#")
+        String wikiText
+        if (hashIndex < 0) {
+            if (templateWikiLocationCache instanceof MCache) {
+                MCache<String, String> mCache = (MCache) templateWikiLocationCache
+                ResourceReference rr = ecfi.resourceFacade.getLocationReference(location)
+                long lastModified = rr != null ? rr.getLastModified() : 0L
+                wikiText = mCache.get(location, lastModified)
+            } else {
+                // TODO: doesn't support on the fly reloading without cache expire/clear!
+                wikiText = templateWikiLocationCache.get(location)
+            }
 
-        if (wikiText) {
-            writer.write(wikiText)
-            return
+            if (wikiText) {
+                writer.write(wikiText)
+                return
+            }
         }
 
         String sourceText = ecfi.resourceFacade.getLocationText(location, false)
@@ -80,20 +83,21 @@ class WikiTemplateRenderer implements TemplateRenderer {
         ScreenRenderImpl sri = (ScreenRenderImpl) ecfi.getEci().getContext().getByString("sri")
         if (sri != null) builder.setBase(sri.getBaseLinkUri())
 
+        String noVerLoc = hashIndex > 0 ? location.substring(0, hashIndex) : location
         MarkupParser parser
-        if (location.endsWith(".cwiki") || location.endsWith(".confluence")) parser = new MarkupParser(new ConfluenceLanguage())
-        else if (location.endsWith(".mediawiki")) parser = new MarkupParser(new MediaWikiLanguage())
-        else if (location.endsWith(".textile")) parser = new MarkupParser(new TextileLanguage())
-        else if (location.endsWith(".tracwiki")) parser = new MarkupParser(new TracWikiLanguage())
-        else if (location.endsWith(".twiki")) parser = new MarkupParser(new TWikiLanguage())
-        else throw new BaseException("Extension not supported for wiki rendering for location ${location}")
+        if (noVerLoc.endsWith(".cwiki") || noVerLoc.endsWith(".confluence")) parser = new MarkupParser(new ConfluenceLanguage())
+        else if (noVerLoc.endsWith(".mediawiki")) parser = new MarkupParser(new MediaWikiLanguage())
+        else if (noVerLoc.endsWith(".textile")) parser = new MarkupParser(new TextileLanguage())
+        else if (noVerLoc.endsWith(".tracwiki")) parser = new MarkupParser(new TracWikiLanguage())
+        else if (noVerLoc.endsWith(".twiki")) parser = new MarkupParser(new TWikiLanguage())
+        else throw new BaseException("Extension not supported for wiki rendering for noVerLoc ${noVerLoc}")
 
         parser.setBuilder(builder)
         parser.parse(sourceText)
 
         wikiText = localWriter.toString()
         if (wikiText) {
-            templateWikiLocationCache.put(location, wikiText)
+            if (hashIndex < 0) templateWikiLocationCache.put(location, wikiText)
             writer.write(wikiText)
         }
     }
