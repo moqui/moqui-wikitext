@@ -14,8 +14,9 @@
 
 apply plugin: 'groovy'
 
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 version = '1.0.0'
+
 def jarBaseName = 'moqui-wikitext'
 def moquiDir = projectDir.parentFile.parentFile.parentFile
 def frameworkDir = file(moquiDir.absolutePath + '/framework')
