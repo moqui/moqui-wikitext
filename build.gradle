@@ -46,15 +46,15 @@ tasks.withType(JavaCompile) { options.compilerArgs << "-proc:none" }
 tasks.withType(GroovyCompile) { options.compilerArgs << "-proc:none" }
 
 dependencies {
-    compile project(':framework')
+    implementation project(':framework')
 
     // Mylyn Wikitext: only older versions found in jcenter or mvnrepository
-    compile name: 'org.eclipse.mylyn.wikitext.core_1.8.0.I20121130-0624', version: '' // EPL
-    compile name: 'org.eclipse.mylyn.wikitext.confluence.core_1.8.0.I20121130-0624', version: '' // EPL
-    compile name: 'org.eclipse.mylyn.wikitext.mediawiki.core_1.8.0.I20121130-0624', version: '' // EPL
-    compile name: 'org.eclipse.mylyn.wikitext.textile.core_1.8.0.I20121130-0624', version: '' // EPL
-    compile name: 'org.eclipse.mylyn.wikitext.tracwiki.core_1.8.0.I20121130-0624', version: '' // EPL
-    compile name: 'org.eclipse.mylyn.wikitext.twiki.core_1.8.0.I20121130-0624', version: '' // EPL
+    implementation name: 'org.eclipse.mylyn.wikitext.core_1.8.0.I20121130-0624', version: '' // EPL
+    implementation name: 'org.eclipse.mylyn.wikitext.confluence.core_1.8.0.I20121130-0624', version: '' // EPL
+    implementation name: 'org.eclipse.mylyn.wikitext.mediawiki.core_1.8.0.I20121130-0624', version: '' // EPL
+    implementation name: 'org.eclipse.mylyn.wikitext.textile.core_1.8.0.I20121130-0624', version: '' // EPL
+    implementation name: 'org.eclipse.mylyn.wikitext.tracwiki.core_1.8.0.I20121130-0624', version: '' // EPL
+    implementation name: 'org.eclipse.mylyn.wikitext.twiki.core_1.8.0.I20121130-0624', version: '' // EPL
 }
 
 // by default the Java plugin runs test on build, change to not do that (only run test if explicit task)
@@ -69,7 +69,7 @@ jar {
     archiveBaseName = jarBaseName
 }
 task copyDependencies { doLast {
-    copy { from (configurations.runtime - project(':framework').configurations.runtime - project(':framework').jar.archivePath)
+    copy { from (configurations.runtimeClasspath - project(':framework').configurations.runtimeClasspath - project(':framework').jar.archivePath)
         into file(projectDir.absolutePath + '/lib') }
 } }
 copyDependencies.dependsOn cleanLib
