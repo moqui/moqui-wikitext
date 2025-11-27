@@ -69,7 +69,10 @@ jar {
     archiveBaseName = jarBaseName
 }
 task copyDependencies { doLast {
-    copy { from (configurations.runtimeClasspath - project(':framework').configurations.runtimeClasspath - project(':framework').jar.archivePath)
+    copy {
+        from (configurations.runtimeClasspath -
+              project(':framework').configurations.runtimeClasspath -
+              project(':framework').tasks.jar.archiveFile.get().asFile)
         into file(projectDir.absolutePath + '/lib') }
 } }
 copyDependencies.dependsOn cleanLib
